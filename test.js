@@ -2,11 +2,10 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 // キーを文字列化する
-const keyToStr = function(derKey, prefix) {
-    return prefix + derKey.toString('base64').replaceAll('=', '');
-}
+const keyToStr = (derKey, prefix) => prefix + derKey.toString('base64').replaceAll('=', '');
+
 // 文字列からキー(DER形式)を復元する
-const strToKey = function(encodedKey, prefix) {
+const strToKey = (encodedKey, prefix) => {
     if (!encodedKey?.startsWith(prefix)) {
         throw new Error('Wrong key prefix.');
     }
@@ -18,14 +17,14 @@ const publicKeyPrefix = 'pk_';
 const secretKeyPrefix = 'sk_';
 
 // 秘密鍵を復元
-const decodeSecretKeyStr = function(encodedSecretKey) {
+const decodeSecretKeyStr = (encodedSecretKey) => {
     return crypto.createPrivateKey(
         {key: strToKey(secretKeyStr, secretKeyPrefix), type: 'pkcs8', format: 'der' }
     ).export({ type: 'pkcs8', format: 'pem' });
 }
 
 // 公開鍵を復元
-const decodePublicKeyStr = function(encodedPublicKey) {
+const decodePublicKeyStr = (encodedPublicKey) => {
     return crypto.createPublicKey(
         { key: strToKey(encodedPublicKey, publicKeyPrefix), type: 'spki', format: 'der' }
     ).export({ type: 'spki', format: 'pem' });
@@ -82,7 +81,7 @@ const result = jwt.verify(
     resultJwt,
     publicKeyPem,
     Object.assign({
-            algorithms: ['ES256'], // alg: "none" 攻撃に対する対策
+            algorithms: ['ES256'],
         },
         jwtClaims)
 );
