@@ -1,3 +1,5 @@
+/*jshint esversion: 11 */
+
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -10,7 +12,7 @@ const strToKey = (encodedKey, prefix) => {
         throw new Error('Wrong key prefix.');
     }
     return Buffer.from(encodedKey.substring(prefix.length), 'base64');
-}
+};
 
 // デバッグ時とかに判別できるようにするための分かりやすいプリフィックス
 const publicKeyPrefix = 'pk_';
@@ -21,14 +23,14 @@ const decodeSecretKeyStr = (encodedSecretKey) => {
     return crypto.createPrivateKey(
         {key: strToKey(secretKeyStr, secretKeyPrefix), type: 'pkcs8', format: 'der' }
     ).export({ type: 'pkcs8', format: 'pem' });
-}
+};
 
 // 公開鍵を復元
 const decodePublicKeyStr = (encodedPublicKey) => {
     return crypto.createPublicKey(
         { key: strToKey(encodedPublicKey, publicKeyPrefix), type: 'spki', format: 'der' }
     ).export({ type: 'spki', format: 'pem' });
-}
+};
 
 //
 // サンプル
